@@ -185,6 +185,17 @@ export const createEventScheduleValidationSchema = {
 };
 
 export const createEventRegistrationValidationSchema = {
+  id: {
+    //only exists when updating, so is optional
+    isInt: {
+      errorMessage: "Registration ID must be an integer",
+    },
+    optional: true,
+  },
+  purchase_id: {
+    //only exists when payment gateway returns a purchase ID
+    optional: true,
+  },
   event_id: {
     isInt: {
       errorMessage: "Event ID must be an integer",
@@ -271,9 +282,7 @@ export const createEventRegistrationValidationSchema = {
     isArray: {
       errorMessage: "Attendees must be an array.",
     },
-    notEmpty: {
-      errorMessage: "Attendees array is required.",
-    },
+    optional: true,
     custom: {
       options: (value) => {
         if (!Array.isArray(value)) {
@@ -333,9 +342,9 @@ export const createEventTicketValidationSchema = {
       },
     },
   },
-  "tickets.*.event_id": {
+  "tickets.*.id": {
     isInt: {
-      errorMessage: "Event ID must be an integer",
+      errorMessage: "ID must be an integer",
     },
     optional: true, //only required when updating
   },
@@ -369,6 +378,14 @@ export const createEventTicketValidationSchema = {
     },
     notEmpty: {
       errorMessage: "Quantity is required",
+    },
+  },
+  "tickets.*.stock": {
+    isInt: {
+      errorMessage: "Stock must be an integer",
+    },
+    notEmpty: {
+      errorMessage: "Stock is required",
     },
   },
   "tickets.*.attendee_limit": {
@@ -437,4 +454,19 @@ export const createEventAttendeeValidationSchema = {
     },
     optional: true,
   },
+  status:{
+    isString: {
+      errorMessage: "Status must be a string",
+    },
+    notEmpty: {
+      errorMessage: "Status is required",
+    },
+  },
+  unique_code: {
+    isString: {
+      errorMessage: "Unique code must be a string",
+    },
+    optional:true
+  },
 };
+

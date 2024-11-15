@@ -19,7 +19,8 @@ class TicketsModel {
   async getTickets(query) {
     let sql = "SELECT * FROM tickets";
     const params = [];
-    const conditions = [];
+    //default condition, tickets with status confirmed
+    const conditions = ["status = 'confirmed'"];
 
     if (query.all === "true") {
       return await this.getAllTickets();
@@ -80,6 +81,26 @@ class TicketsModel {
       return result.affectedRows;
     } catch (error) {
       throw new Error(`Error updating ticket: ${error.message}`);
+    }
+  }
+
+  //decrease ticket stock
+  async decreaseTicketStock(id) {
+    try {
+      const [result] = await this.pool.query("UPDATE tickets SET stock = stock - 1 WHERE id = ?", [parseInt(id)]);
+      return result.affectedRows;
+    } catch (error) {
+      throw new Error(`Error updating ticket stock: ${error.message}`);
+    }
+  }
+
+  //increase ticket stock
+  async increaseTicketStock(id, quantity) {
+    try {
+      const [result] = await this.pool.query("UPDATE tickets SET stock = stock + ? WHERE id = ?", [parseInt(quantity), parseInt(id)]);
+      return result.affectedRows;
+    } catch (error) {
+      throw new Error(`Error updating ticket stock: ${error.message}`);
     }
   }
 

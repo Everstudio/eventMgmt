@@ -46,6 +46,28 @@ class TicketsController {
     }
   }
 
+  //update ticket
+  async updateTicket(req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json(errors.array());
+    }
+
+    const data = matchedData(req);
+    const ticket = data.tickets;
+
+    try {
+      const affectedRows = await this.ticketsModel.updateTicket(req.params.id, ticket);
+      if (affectedRows) {
+        res.status(200).json({ message: "Ticket updated successfully" });
+      } else {
+        res.status(404).json({ error: "Ticket not found" });
+      }
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
   //get all tickets
   async getTickets(req, res) {
     let query = null;

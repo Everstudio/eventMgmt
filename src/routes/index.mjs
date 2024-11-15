@@ -5,6 +5,7 @@ import registrationRouter from "./registrations.mjs";
 import ticketRouter from "./tickets.mjs";
 import attendeeRouter from "./attendees.mjs";
 
+
 const router = Router();
 
 router.use(attendeeRouter);

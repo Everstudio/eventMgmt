@@ -7,12 +7,17 @@ import AttendeesController from "../controllers/attendeesController.mjs";
 
 const router = Router();
 
+
+
+//get attendees e-ticket, without authentication
+router.get("/web/events/attendees/eticket/", async (req, res) => {
+  const attendees = await AttendeesController.getAttendeesETicket(req, res);
+});
+
+
 router.use(isAuthenticated);
 
-//update attendee
-router.put("/web/events/attendees", checkRole(["admin"]), checkSchema(createEventAttendeeValidationSchema), async (req, res) => {
-  const attendees = await AttendeesController.updateAttendee(req, res);
-});
+
 
 //get all attendees
 router.get("/web/events/attendees", async (req, res) => {
@@ -20,13 +25,22 @@ router.get("/web/events/attendees", async (req, res) => {
 });
 
 //update attendee
-router.put("/web/events/attendees", checkRole(["admin"]), checkSchema(createEventAttendeeValidationSchema), async (req, res) => {
+// router.put("/web/events/attendees", checkRole(["admin"]), checkSchema(createEventAttendeeValidationSchema), async (req, res) => {
+//   const attendees = await AttendeesController.updateAttendee(req, res);
+// });
+
+//update attendee
+router.put("/web/events/attendees/:id", checkRole(["admin"]), checkSchema(createEventAttendeeValidationSchema), async (req, res) => {
   const attendees = await AttendeesController.updateAttendee(req, res);
 });
-
 //get attendee by registration id
 router.get("/web/events/attendees/registration/:registration_id", async (req, res) => {
   const attendees = await AttendeesController.getAttendeesByRegistrationId(req, res);
+});
+
+//get event attendees by event id
+router.get("/web/events/attendees/event/:event_id", async (req, res) => {
+  const attendees = await AttendeesController.getAttendeesByEventId(req, res);
 });
 
 //get attendee by id

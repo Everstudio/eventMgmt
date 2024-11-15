@@ -25,12 +25,49 @@ class RegistrationsModel {
   }
 
   //get all registrations
-  async getRegistrations() {
+  async getRegistrations(query) {
     try {
-      const [registrations] = await this.pool.query("SELECT * FROM registrations");
+      let sql = "SELECT * FROM registrations";
+      let params = [];
+      if (query) {
+        if (query.event_id) {
+          sql += " WHERE event_id = ?";
+          params.push(query.event_id);
+        }
+
+        if (query.status) {
+          if (params.length > 0) {
+            sql += " AND status = ?";
+          } else {
+            sql += " WHERE status = ?";
+          }
+          params.push(query.status);
+        }
+      }
+      const [registrations] = await this.pool.query(sql, params);
       return registrations;
     } catch (error) {
       throw new Error(`Error retrieving registrations: ${error.message}`);
+    }
+  }
+
+  //get registration by purchase_id
+  async getRegistrationByPurchaseId(purchase_id) {
+    try {
+      const [registration] = await this.pool.query("SELECT * FROM registrations WHERE purchase_id = ?", [purchase_id]);
+      return registration[0] || null;
+    } catch (error) {
+      throw new Error(`Error retrieving registration by purchase_id: ${error.message}`);
+    }
+  }
+
+  //update registration status
+  async updateRegistrationStatus(id, status) {
+    try {
+      const [result] = await this.pool.query("UPDATE registrations SET status = ? WHERE id = ?", [status, parseInt(id)]);
+      return result.affectedRows;
+    } catch (error) {
+      throw new Error(`Error updating registration status: ${error.message}`);
     }
   }
 

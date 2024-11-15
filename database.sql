@@ -111,7 +111,8 @@ CREATE TABLE tickets (
     event_id INT,
     name VARCHAR(50), -- General, VIP, Student
     price DECIMAL(10, 2),
-    quantity INT,
+    quantity INT, -- default quantity of the ticket (orginal stock)
+    stock INT, -- total stock of the ticket
     attendee_limit INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE
@@ -128,6 +129,8 @@ CREATE TABLE attendees (
     phone VARCHAR(15), -- phone number for attendee if applicable
     qr_code VARCHAR(255), -- unique QR code for individual check-in, e.g., attendee:5678:1234:9999 (attendee_id:registration_id:ticket_id)  
     checked_in BOOLEAN DEFAULT FALSE,
+    unique_code VARCHAR(45), -- unique code for eticket verification
+    status -- pending, confirmed or failed. based on registration status.
     FOREIGN KEY (registration_id) REFERENCES registrations(id) ON DELETE CASCADE,
     FOREIGN KEY (ticket_id) REFERENCES tickets(id) ON DELETE CASCADE
 );

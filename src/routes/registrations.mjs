@@ -10,6 +10,11 @@ const router = Router();
 
 router.use(isAuthenticated);
 
+//create registration sample, testing purpost
+router.post("/web/events/registrations/sample", checkRole(["admin"]), checkSchema(createEventRegistrationValidationSchema), async (req, res) => {
+  const events = await RegistrationsController.createRegistrationSample(req, res);
+});
+
 //create registration
 router.post("/web/events/registrations", checkRole(["admin", "customer"]), checkSchema(createEventRegistrationValidationSchema), async (req, res) => {
   const events = await RegistrationsController.createRegistration(req, res);
@@ -20,8 +25,14 @@ router.get("/web/events/registrations", async (req, res) => {
   const events = await RegistrationsController.getRegistrations(req, res);
 });
 
+//test generate the pdf
+router.get("/web/events/registrations/pdf", async (req, res) => {
+  const events = await RegistrationsController.generatePdf(req, res);
+});
+
+
 //update registration
-router.put("/web/events/registrations", checkRole(["admin"]), checkSchema(createEventRegistrationValidationSchema), async (req, res) => {
+router.put("/web/events/registrations/:id", checkRole(["admin"]), checkSchema(createEventRegistrationValidationSchema), async (req, res) => {
   const events = await RegistrationsController.updateRegistration(req, res);
 });
 
@@ -34,5 +45,6 @@ router.get("/web/events/registrations/:id", async (req, res) => {
 router.delete("/web/events/registrations/:id", checkRole(["admin"]), async (req, res) => {
   const events = await RegistrationsController.deleteRegistration(req, res);
 });
+
 
 export default router;

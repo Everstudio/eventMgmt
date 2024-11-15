@@ -13,6 +13,8 @@ import "./strategies/jwt-strategy.mjs";
 import routes from "./routes/index.mjs";
 import pool from "./configs/db.mjs";
 
+import paymentRouter from "./routes/paymentCallback.mjs";
+
 const app = express();
 const options = {
   host: process.env.DB_HOST,
@@ -53,6 +55,9 @@ const testDbConnection = async () => {
 app.get("/", (req, res) => {
   res.status(200).send("Hello World");
 });
+
+//exclude authenticated routes
+app.use(paymentRouter);
 
 app.use(routes);
 
